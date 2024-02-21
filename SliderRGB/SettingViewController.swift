@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ViewController: UIViewController {
+final class SettingViewController: UIViewController {
 
     @IBOutlet var colorRGBView: UIView!
     
@@ -19,9 +19,18 @@ final class ViewController: UIViewController {
     @IBOutlet var greenSlider: UISlider!
     @IBOutlet var blueSlider: UISlider!
     
+    weak var delegate: SettingViewControllerDelegate?
+    var currentColor: UIColor!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         colorRGBView.layer.cornerRadius = CGFloat(15)
+
+        let ciCurrentColor = CIColor(color: currentColor)
+        redSlider.value = Float(ciCurrentColor.red)
+        greenSlider.value = Float(ciCurrentColor.green)
+        blueSlider.value = Float(ciCurrentColor.blue)
+ 
         editColor()
     }
 
@@ -37,6 +46,11 @@ final class ViewController: UIViewController {
         editColor()
     }
     
+    @IBAction func doneButtonAction() {
+        delegate?.sendColor(color: colorRGBView.backgroundColor ?? UIColor.white)
+        dismiss(animated: true)
+    }
+    
     private func editColor() {
         colorRGBView.backgroundColor = UIColor.init(
             displayP3Red: CGFloat(redSlider.value),
@@ -48,4 +62,3 @@ final class ViewController: UIViewController {
     }
 
 }
-
